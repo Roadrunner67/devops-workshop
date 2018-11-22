@@ -1,6 +1,12 @@
 pipeline {
   agent none
   stages {
+   stage('Docker build') {
+      agent any
+      steps {
+        sh 'docker build -t devops/aspnetmvc:latest Sample'
+      }
+    }
     stage('Stop existing container') {
       agent any
       steps {
@@ -16,10 +22,10 @@ pipeline {
         }
       }
     }
-    stage('Docker build') {
+     stage('Docker deploy') {
       agent any
       steps {
-        sh 'docker build -t devops/aspnetmvc:latest Sample'
+        sh 'docker run -d --name=aspnetmvc -p 8100:80 devops/aspnetmvc:latest'
       }
     }
 
